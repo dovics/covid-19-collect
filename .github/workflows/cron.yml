@@ -19,10 +19,8 @@ jobs:
       POSTGRES_DB: ${{ secrets.PostgresDB }}
       POSTGRES_PORT: ${{ secrets.PostgresPort}}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-      - uses: actions-rs/cargo@v1
-        with:
-          command: run
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --verbose
+    - name: Run
+      run: cargo run --verbose

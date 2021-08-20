@@ -31,8 +31,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let dsn = format!(
         "host={} user={} password={} dbname={} port={}",
         host, user, password, db, port
-    )
-    println!("{:?}", dsn)
+    );
+    println!("{:?}", dsn);
 
     let (client, connection) = tokio_postgres::connect(
         &dsn,
