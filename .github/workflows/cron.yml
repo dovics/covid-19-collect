@@ -1,0 +1,28 @@
+name: cron
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron:  '0 * * * *'
+jobs:
+  run:
+    name: Rust Run
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_HOST: ${{ secrets.PostgresHost }}
+      POSTGRES_USER: ${{ secrets.PostgresUser }}
+      POSTGRES_PASSWORD: ${{ secrets.PostgresPassword }}
+      POSTGRES_DB: ${{ secrets.PostgresDB }}
+      POSTGRES_PORT: ${{ secrets.PostgresPort}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions-rs/cargo@v1
+        with:
+          command: run

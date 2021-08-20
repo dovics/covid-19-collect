@@ -26,9 +26,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let user = env::var("POSTGRES_USER")?;
     let password = env::var("POSTGRES_PASSWORD")?;
     let db = env::var("POSTGRES_DB")?;
-    
+    let port = env::var("POSTGRES_PORT")?;
+
     let (client, connection) = tokio_postgres::connect(
-        format!("host={} user={} password={} dbname={}", host, user, password, db),
+        format!("host={} user={} password={} dbname={} port={}", host, user, password, db, port),
         NoTls,
     )
     .await?;
