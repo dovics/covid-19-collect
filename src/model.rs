@@ -11,20 +11,29 @@ use crate::errors::{PostgresError, PostgresErrorKind};
 #[derive(Debug, Eq, PartialEq, IntoPrimitive)]
 #[repr(usize)]
 enum PostgresSqlIndex {
-    CreateTable = 0,
-    Insert = 1,
-    SelectByContry = 2,
+    CreateSchema = 0,
+    CreateTable = 1,
+    Insert = 2,
+    SelectByContry = 3,
 }
 
-const SQL_STRING: [&'static str; 3] = [
-    r#"CREATE TABLE IF NOT EXISTS basic.test_json (
-        create_time TIMESTAMPTZ,
+const SQL_STRING: [&'static str; 4] = [
+    r#"CREATE SCHEMA IF NOT EXISTS covid"#,
+    r#"CREATE TABLE IF NOT EXISTS covid.contry (
+        time TIMESTAMPTZ,
         contry VARCHAR(20),
         json_data JSON
     )"#,
-    r#"INSERT INTO basic.test_json(create_time, contry, json_data) VALUES ($1, $2, $3)"#,
-    r#"SELECT create_time, contry, json_data FROM basic.test_json WHERE contry = $1"#,
+    r#"INSERT INTO covid.contry(time, contry, json_data) VALUES ($1, $2, $3)"#,
+    r#"SELECT time, contry, json_data FROM covid.contry WHERE contry = $1"#,
 ];
+
+pub async fn create_schema(client: &Client) -> Result<(), Box<dyn std::error::Error>> {
+    let index: usize = PostgresSqlIndex::CreateSchema.into();
+    let _affect = client.execute(SQL_STRING[index], &[]).await?;
+
+    Ok(())
+}
 
 pub async fn create_table(client: &Client) -> Result<(), Box<dyn std::error::Error>> {
     let index: usize = PostgresSqlIndex::CreateTable.into();
